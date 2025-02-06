@@ -7,7 +7,6 @@ Welcome to the **Personal Bash Resources** repository! This collection of bash f
 This repository includes a diverse set of bash scripts and functions that can help with:
 
 - **Media Manipulation**: Automate tasks like converting, resizing, or organizing media files.
-- **Internet Content Downloading**: Easily download content from the web, including videos, images, and documents.
 - **File and Directory Management**: Simplify tasks such as renaming, moving, or organizing files and directories.
 - **Development Environment Setup**: Set up development environment for different languages
 
