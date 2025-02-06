@@ -11,6 +11,10 @@ This repository includes a diverse set of bash scripts and functions that can he
 - **File and Directory Management**: Simplify tasks such as renaming, moving, or organizing files and directories.
 - **Development Environment Setup**: Set up development environment for different languages
 
+### Original Purpose
+
+The original purpose of this script was to provide an easy way to package up my shell environment and move it between computers. This allows for seamless uploading of the configuration to a repository or cloud storage, enabling easy retrieval and setup on another computer later. This approach ensures consistency and efficiency across different working environments and computers, since working in tech basically ensures that you are going to be laid off many times as companies shrink and expand.
+
 ### Getting Started
 
 **Please note that this repository is designed for MacOS and Linux** - There are no plans to adapt these for Windows usage.
