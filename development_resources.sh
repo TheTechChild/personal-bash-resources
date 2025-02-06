@@ -19,6 +19,7 @@ function aws-login {
 
 # bash aliases
 alias ll='ls -la'
+alias rsrc='source ~/.zshrc'
 
 # git aliases
 alias gpnv= 'git push --no-verify'
