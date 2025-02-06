@@ -15,6 +15,22 @@ This repository includes a diverse set of bash scripts and functions that can he
 
 The original purpose of this repository was to provide an easy way to package up my shell environment and move it between computers. This allows for seamless uploading of the configuration to a repository or cloud storage, enabling easy retrieval and setup on another computer later. This approach ensures consistency and efficiency across different working environments and computers, since working in tech basically ensures that you are going to be laid off many times as companies shrink and expand.
 
+I got so fed up with having to reinstall everything, remember all of my git aliases, install all of the dependencies for my development environment... It is the worst when trying to onboard to a new company, or even continue side projects that I was previously working on.
+
+This project changes all of that. Now my .zshrc file looks like this:
+```
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+PBR_DIR=$HOME/personal-bash-resources
+source $PBR_DIR/main.sh
+```
+
 ### Getting Started
 
 **Please note** - this repository is designed for MacOS and Linux. There are no plans to adapt it for Windows usage.
