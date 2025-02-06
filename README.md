@@ -9,36 +9,30 @@ This repository includes a diverse set of bash scripts and functions that can he
 - **Media Manipulation**: Automate tasks like converting, resizing, or organizing media files.
 - **Internet Content Downloading**: Easily download content from the web, including videos, images, and documents.
 - **File and Directory Management**: Simplify tasks such as renaming, moving, or organizing files and directories.
-- **Development Environment Setup**: Quickly set up your development environment, ensuring all necessary tools and configurations are in place.
-- **Cursor Management**: Automate cursor-related tasks to enhance your workflow.
+- **Development Environment Setup**: Set up development environment for different languages
 
 ### Getting Started
 
 **Please note that this repository is designed for MacOS and Linux** - There are no plans to adapt these for Windows usage.
 
-1. Clone the repository to your local machine
+If you use a .bashrc or some other shell configuration for your shell then you will need to substitute the appropriate shell configuration filename in the following commands: `.zshrc` becomes `.bashrc`
+
+1. Clone the repository to your home directory:
    ```
-   git clone https://github.com/TheTechChild/personal-bash-resources.git
+   git clone https://github.com/TheTechChild/personal-bash-resources.git $HOME/personal-bash-resources
    ```
 
-2. Navigate to the cloned directory:
+2. Add the following line to your `.bashrc` or `.zshrc`:
    ```
-   cd personal-bash-resources
-   ```
-
-3. Source these resources in your `.bashrc` or `.bash_profile`:
-   ```
-   echo "source /path/to/personal-bash-resources/main.sh" >> ~/.bashrc
+   echo "source $HOME/personal-bash-resources/main.sh" >> ~/.zshrc
    ```
 
-4. Reload your shell configuration:
+3. Reload your shell configuration:
    ```
-   source ~/.bashrc
+   source ~/.zshrc
    ```
 
 ## Usage
-
-After you 
 
 Each script or function is documented with usage instructions. To see a list of available functions, you can run: `list-functions`
 
