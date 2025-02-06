@@ -54,10 +54,12 @@ install_development_languages() {
     eval "$(rbenv init -)"
   fi
 
-  if ! rbenv versions | grep -q "3.0.0"; then
-    echo "Ruby 3.0.0 not found, installing..."
-    rbenv install 3.0.0
-    rbenv global 3.0.0
+  # Install the latest stable Ruby version
+  latest_ruby=$(rbenv install -l | grep -v - | tail -1)
+  if ! rbenv versions | grep -q "$latest_ruby"; then
+    echo "Ruby $latest_ruby not found, installing..."
+    rbenv install "$latest_ruby"
+    rbenv global "$latest_ruby"
   fi
 
   # Check and install Python3 via brew
@@ -76,10 +78,11 @@ install_development_languages() {
     source ~/.bash_profile
   fi
 
-  if ! nvm ls | grep -q "v14.17.0"; then
-    echo "Node.js v14.17.0 not found, installing..."
-    nvm install 14.17.0
-    nvm use 14.17.0
-    nvm alias default 14.17.0
+  latest_node=$(nvm ls-remote --lts | tail -1 | awk '{print $1}')
+  if ! nvm ls | grep -q "$latest_node"; then
+    echo "Node.js $latest_node not found, installing..."
+    nvm install "$latest_node"
+    nvm use "$latest_node"
+    nvm alias default "$latest_node"
   fi
 }
