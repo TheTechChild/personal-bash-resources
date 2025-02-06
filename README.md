@@ -28,7 +28,7 @@ If you use a .bashrc or some other shell configuration for your shell then you w
    INSTALL_LOCATION=$HOME
    ```
 
-2. Clone the repository to your home directory:
+2. Clone the repository to the location specified by `INSTALL_LOCATION`:
    ```
    git clone https://github.com/TheTechChild/personal-bash-resources.git $INSTALL_LOCATION/personal-bash-resources
    ```
