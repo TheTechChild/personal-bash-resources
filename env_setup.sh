@@ -68,6 +68,12 @@ install_development_languages() {
     brew install python
   fi
 
+  # Check and install Zig via brew
+  if ! command -v zig &> /dev/null; then
+    echo "Zig not found, installing..."
+    brew install zig
+  fi
+
   # Check and install Node.js via nvm
   if ! command -v nvm &> /dev/null; then
     echo "nvm not found, installing..."
