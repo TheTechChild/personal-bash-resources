@@ -91,4 +91,14 @@ install_development_languages() {
     nvm use "$latest_node"
     nvm alias default "$latest_node"
   fi
+
+  # Check and install Poetry
+  if ! command -v poetry &> /dev/null; then
+    echo "Poetry not found, installing..."
+    curl -sSL https://install.python-poetry.org | python3 -
+    # Add Poetry to PATH
+    export PATH="$HOME/.local/bin:$PATH"
+    # Configure Poetry to create virtual environments in the project directory
+    poetry config virtualenvs.in-project true
+  fi
 }
