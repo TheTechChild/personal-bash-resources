@@ -3,3 +3,6 @@ current-zsh.sh
 # allow for users to add their own shell configuration
 extensions/*
 !extensions/index.sh
+
+# ignore backup files
+*.zip
