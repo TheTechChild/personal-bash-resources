@@ -46,6 +46,25 @@ alias tf="terraform"
 export AWS_PROFILE="alix-admin"
 
 install_development_languages() {
+  # Check and install Homebrew
+  if ! command -v brew &> /dev/null; then
+    echo "Homebrew not found, installing..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    # Add Homebrew to PATH based on processor architecture
+    if [[ $(uname -m) == "arm64" ]]; then
+      # For Apple Silicon
+      echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+      # For Intel Macs
+      echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+      eval "$(/usr/local/bin/brew shellenv)"
+    fi
+    
+    echo "Homebrew installed successfully"
+  fi
+
   # Check and install Ruby via rbenv
   if ! command -v rbenv &> /dev/null; then
     echo "rbenv not found, installing..."
