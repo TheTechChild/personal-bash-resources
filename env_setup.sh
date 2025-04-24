@@ -120,4 +120,20 @@ install_development_languages() {
     # Configure Poetry to create virtual environments in the project directory
     poetry config virtualenvs.in-project true
   fi
+
+  # Check and install Bun via Homebrew
+  if ! command -v bun &> /dev/null; then
+    echo "Bun not found, installing via Homebrew..."
+    brew tap oven-sh/bun
+    brew install bun
+    
+    # Setup Bun environment if it isn't already set up
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+    
+    # Add shell completions
+    bun completions
+    
+    echo "Bun installed successfully"
+  fi
 }
