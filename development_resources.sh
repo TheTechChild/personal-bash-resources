@@ -93,3 +93,7 @@ function install-global-git-ignore() {
   # If the file does not exist, the condition evaluates to false and the code inside the if block will not execute
   git config --global core.excludesfile ~/.gitignore_global
 }
+
+# bun completions
+[ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
+if [ -f "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc" ]; then . "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc"; fi
