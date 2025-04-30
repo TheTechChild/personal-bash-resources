@@ -77,3 +77,19 @@ function git-update-subfolders() {
 # python aliases
 alias python2='python'
 alias python='python3'
+
+function install-global-git-ignore() {
+  # This line checks if the file ~/.gitignore_global exists in the user's home directory
+  # If the file exists, the condition evaluates to true and the code inside the if block will execute
+  if [ -f ~/.gitignore_global ]; then
+    echo "~/.gitignore_global already exists"
+    return
+  fi
+
+  # copy the .gitignore_global file from $PBR_DIR/extensions/files/.gitignore_global to the user's home directory
+  cp $PBR_DIR/extensions/files/.gitignore_global ~/.gitignore_global
+
+  # This line creates a new file called ~/.gitignore_global in the user's home directory
+  # If the file does not exist, the condition evaluates to false and the code inside the if block will not execute
+  git config --global core.excludesfile ~/.gitignore_global
+}
