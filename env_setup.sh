@@ -18,6 +18,7 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH="/opt/homebrew/Cellar/python@3.13/3.13.1/bin/:$PATH"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 # rbenv setup
 eval "$(rbenv init -)"
@@ -126,10 +127,6 @@ install_development_languages() {
     echo "Bun not found, installing via Homebrew..."
     brew tap oven-sh/bun
     brew install bun
-    
-    # Setup Bun environment if it isn't already set up
-    export BUN_INSTALL="$HOME/.bun"
-    export PATH="$BUN_INSTALL/bin:$PATH"
     
     # Add shell completions
     bun completions

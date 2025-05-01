@@ -30,6 +30,9 @@ alias gcb=  'git checkout -b'
 alias gcm=  'git commit -m'
 alias gdel= 'git branch -D'
 
+# datadog alias
+alias ddog='datadog-js'
+
 # git functions
 function git-update-subfolders() {
   for dir in */; do
@@ -72,6 +75,26 @@ function git-update-subfolders() {
       cd - || return
     fi
   done
+}
+
+#!/bin/bash
+
+# Function to find all directories with package.json and run yarn install
+function install_dependencies() {
+    local dir="$1"
+    
+    # Check if current directory has package.json
+    if [ -f "$dir/package.json" ]; then
+        echo "Installing dependencies in $dir"
+        (cd "$dir" && yarn install)
+    fi
+    
+    # Recursively process all subdirectories
+    for subdir in "$dir"/*/; do
+        if [ -d "$subdir" ]; then
+            install_dependencies "$subdir"
+        fi
+    done
 }
 
 # python aliases
