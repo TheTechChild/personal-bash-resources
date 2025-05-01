@@ -133,4 +133,12 @@ install_development_languages() {
     
     echo "Bun installed successfully"
   fi
+
+  # Check and install Elixir via Homebrew
+  if ! command -v elixir &> /dev/null; then
+    echo "Elixir not found, installing via Homebrew..."
+    brew install elixir
+    
+    echo "Elixir installed successfully"
+  fi
 }

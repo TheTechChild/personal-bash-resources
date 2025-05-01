@@ -81,18 +81,32 @@ function git-update-subfolders() {
 
 # Function to find all directories with package.json and run yarn install
 function install_dependencies() {
-    local dir="$1"
-    
-    # Check if current directory has package.json
-    if [ -f "$dir/package.json" ]; then
-        echo "Installing dependencies in $dir"
-        (cd "$dir" && yarn install)
+    # Check if INSTALL_FOLDERS environment variable is set
+    if [ -z "${INSTALL_FOLDERS+x}" ]; then
+        echo "INSTALL_FOLDERS environment variable is not set"
+        echo "Please set it using: export INSTALL_FOLDERS=(folder1 folder2 folder3)"
+        return 1
     fi
-    
-    # Recursively process all subdirectories
-    for subdir in "$dir"/*/; do
-        if [ -d "$subdir" ]; then
-            install_dependencies "$subdir"
+
+    # Check if INSTALL_FOLDERS is an array
+    if ! declare -p INSTALL_FOLDERS 2>/dev/null | grep -q 'declare -a'; then
+        echo "INSTALL_FOLDERS is not set as an array"
+        echo "Please set it using: export INSTALL_FOLDERS=(folder1 folder2 folder3)"
+        return 1
+    fi
+
+    # Loop through each folder in INSTALL_FOLDERS
+    for folder in "${INSTALL_FOLDERS[@]}"; do
+        # Check if folder exists in current directory
+        if [ -d "$folder" ]; then
+            echo "Installing dependencies in $folder"
+            if [ -f "$folder/package.json" ]; then
+                (cd "$folder" && yarn install)
+            else
+                echo "No package.json found in $folder"
+            fi
+        else
+            echo "Folder $folder does not exist in current directory"
         fi
     done
 }
