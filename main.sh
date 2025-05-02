@@ -10,6 +10,7 @@ source "$PBR_DIR/gaming_utilities.sh"
 source "$PBR_DIR/file_utilities.sh"
 source "$PBR_DIR/media_utilities.sh"
 source "$PBR_DIR/extensions/index.sh"
+source "$PBR_DIR/path.sh"
 
 # Include any custom shell extensions added by the individual user
 source "$PBR_DIR/extensions/index.sh"

@@ -113,7 +113,6 @@ function install_dependencies() {
 
 # python aliases
 alias python2='python'
-alias python='python3'
 
 function install-global-git-ignore() {
   # This line checks if the file ~/.gitignore_global exists in the user's home directory

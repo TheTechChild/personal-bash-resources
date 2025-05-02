@@ -8,17 +8,8 @@ export PKG_CONFIG_PATH="/opt/homebrew/opt/postgresql@15/lib/pkgconfig"
 export PYENV_ROOT="$HOME/.penv"
 export BUN_INSTALL="$HOME/.bun"
 export PNPM_HOME="/Users/$USER/Library/pnpm"
-
-# PATH Configuration
-export PATH="$PATH:${GOPATH}/bin"
-export PATH="/opt/homebrew/Caskroom/redis-stack-server/7.2.0-v10/bin:$PATH"
-export PATH="$PATH:/Users/$USER/.local/bin"
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH="/opt/homebrew/Cellar/python@3.13/3.13.1/bin/:$PATH"
-export PATH="$BUN_INSTALL/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+[ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
 
 # rbenv setup
 eval "$(rbenv init -)"
@@ -26,25 +17,8 @@ eval "$(rbenv init -)"
 # nvm setup
 source $(brew --prefix nvm)/nvm.sh
 
-# pyenv setup
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# bun setup
-export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
-
-# pnpm setup
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
 # Terraform setup
 alias tf="terraform"
-
-# AWS setup
-export AWS_PROFILE="alix-admin"
 
 install_development_languages() {
   # Check and install Homebrew
@@ -82,10 +56,20 @@ install_development_languages() {
     rbenv global "$latest_ruby"
   fi
 
-  # Check and install Python3 via brew
+  # Check and install pyenv
+  if ! command -v pyenv &> /dev/null; then
+    echo "pyenv not found, installing..."
+    brew install pyenv
+    eval "$(pyenv init -)"
+  fi
+
+  # Check and install Python3 via pyenv
   if ! command -v python3 &> /dev/null; then
     echo "Python3 not found, installing..."
-    brew install python
+    latest_python=$(pyenv install --list | grep -v - | grep -v dev | grep -v a | grep -v b | tail -1 | tr -d '[:space:]')
+    echo "Installing Python $latest_python..."
+    pyenv install "$latest_python"
+    pyenv global "$latest_python"
   fi
 
   # Check and install Zig via brew
@@ -116,8 +100,6 @@ install_development_languages() {
   if ! command -v poetry &> /dev/null; then
     echo "Poetry not found, installing..."
     curl -sSL https://install.python-poetry.org | python3 -
-    # Add Poetry to PATH
-    export PATH="$HOME/.local/bin:$PATH"
     # Configure Poetry to create virtual environments in the project directory
     poetry config virtualenvs.in-project true
   fi
