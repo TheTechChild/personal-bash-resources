@@ -115,19 +115,26 @@ function install_dependencies() {
 alias python2='python'
 
 function install-global-git-ignore() {
-  # This line checks if the file ~/.gitignore_global exists in the user's home directory
-  # If the file exists, the condition evaluates to true and the code inside the if block will execute
-  if [ -f ~/.gitignore_global ]; then
+  # Check if the symlink or file already exists
+  if [ -e ~/.gitignore_global ]; then
     echo "~/.gitignore_global already exists"
-    return
+    # Check if it's already a symlink to our file
+    if [ -L ~/.gitignore_global ] && [ "$(readlink ~/.gitignore_global)" = "$PBR_DIR/extensions/files/.gitignore_global" ]; then
+      echo "It's already correctly symlinked"
+      return
+    else
+      echo "Removing existing file and creating symlink"
+      rm ~/.gitignore_global
+    fi
   fi
 
-  # copy the .gitignore_global file from $PBR_DIR/extensions/files/.gitignore_global to the user's home directory
-  cp $PBR_DIR/extensions/files/.gitignore_global ~/.gitignore_global
+  # Create a symbolic link to the .gitignore_global in the repository
+  ln -s "$PBR_DIR/extensions/files/.gitignore_global" ~/.gitignore_global
+  echo "Created symlink to global gitignore file"
 
-  # This line creates a new file called ~/.gitignore_global in the user's home directory
-  # If the file does not exist, the condition evaluates to false and the code inside the if block will not execute
+  # Configure git to use this file
   git config --global core.excludesfile ~/.gitignore_global
+  echo "Configured git to use global gitignore file"
 }
 
 # bun completions

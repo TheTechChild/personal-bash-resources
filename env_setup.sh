@@ -8,8 +8,10 @@ export PKG_CONFIG_PATH="/opt/homebrew/opt/postgresql@15/lib/pkgconfig"
 export PYENV_ROOT="$HOME/.penv"
 export BUN_INSTALL="$HOME/.bun"
 export PNPM_HOME="/Users/$USER/Library/pnpm"
-export PYENV_ROOT="$HOME/.pyenv"
 [ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
 
 # rbenv setup
 eval "$(rbenv init -)"
