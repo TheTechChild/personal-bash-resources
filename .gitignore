@@ -1,5 +1,8 @@
 current-zsh.sh
 
+# allow for users to add their own scripts
+scripts/*
+
 # allow for users to add their own shell configuration
 extensions/*
 !extensions/index.sh
