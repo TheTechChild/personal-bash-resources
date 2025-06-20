@@ -126,3 +126,34 @@ install_development_languages() {
     echo "Elixir installed successfully"
   fi
 }
+
+# Install development tools (Claude Code, Cursor, Neovim, iTerm2)
+install_development_tools() {
+  # Check and install Claude Code CLI
+  if ! command -v claude &> /dev/null; then
+    echo "Claude Code CLI not found, installing..."
+    brew install claude
+    echo "Claude Code CLI installed successfully"
+  fi
+
+  # Check and install Cursor
+  if ! command -v cursor &> /dev/null; then
+    echo "Cursor not found, installing..."
+    brew install --cask cursor
+    echo "Cursor installed successfully"
+  fi
+
+  # Check and install Neovim
+  if ! command -v nvim &> /dev/null; then
+    echo "Neovim not found, installing..."
+    brew install neovim
+    echo "Neovim installed successfully"
+  fi
+
+  # Check and install iTerm2
+  if ! [ -d "/Applications/iTerm.app" ]; then
+    echo "iTerm2 not found, installing..."
+    brew install --cask iterm2
+    echo "iTerm2 installed successfully"
+  fi
+}
