@@ -21,6 +21,12 @@ function aws-login {
 alias ll='ls -la'
 alias rsrc='source ~/.zshrc'
 
+# datadog alias
+alias ddog='datadog-js'
+
+# docker aliases
+alias dsp='docker system prune'
+
 # git aliases
 alias gpnv= 'git push --no-verify'
 alias gp=   'git push'
@@ -29,9 +35,6 @@ alias gco=  'git checkout'
 alias gcb=  'git checkout -b'
 alias gcm=  'git commit -m'
 alias gdel= 'git branch -D'
-
-# datadog alias
-alias ddog='datadog-js'
 
 # git functions
 function git-update-subfolders() {
