@@ -80,8 +80,6 @@ function git-update-subfolders() {
   done
 }
 
-#!/bin/bash
-
 # Function to find all directories with package.json and run yarn install
 function install_dependencies() {
     # Check if INSTALL_FOLDERS environment variable is set

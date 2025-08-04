@@ -118,6 +118,13 @@ install_development_languages() {
     echo "Bun installed successfully"
   fi
 
+  # Check and install yarn via NPM
+  if ! command -v yarn &> /dev/null; then
+    echo "Yarn not found, installing via NPM..."
+    npm install -g yarn
+    echo "Yarn installed successfully"
+  fi
+
   # Check and install Elixir via Homebrew
   if ! command -v elixir &> /dev/null; then
     echo "Elixir not found, installing via Homebrew..."
