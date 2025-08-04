@@ -8,6 +8,7 @@ export PATH="/opt/homebrew/Caskroom/redis-stack-server/7.2.0-v10/bin:$PATH"
 export PATH="/opt/homebrew/Cellar/python@3.13/3.13.1/bin/:$PATH"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.docker/bin:$PATH"
 
 # pnpm setup
 case ":$PATH:" in
