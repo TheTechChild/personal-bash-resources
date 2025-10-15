@@ -163,4 +163,12 @@ install_development_tools() {
     brew install --cask iterm2
     echo "iTerm2 installed successfully"
   fi
+
+  # Check and install coreutils via brew
+  if ! command -v gtimeout &> /dev/null; then
+    echo "coreutils not found, installing..."
+    brew install coreutils
+    sudo ln -s /usr/local/bin/gtimeout /usr/local/bin/timeout
+    echo "coreutils installed successfully"
+  fi
 }

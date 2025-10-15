@@ -27,15 +27,6 @@ alias ddog='datadog-js'
 # docker aliases
 alias dsp='docker system prune'
 
-# git aliases
-alias gpnv= 'git push --no-verify'
-alias gp=   'git push'
-alias gpl=  'git pull'
-alias gco=  'git checkout'
-alias gcb=  'git checkout -b'
-alias gcm=  'git commit -m'
-alias gdel= 'git branch -D'
-
 # git functions
 function git-update-subfolders() {
   for dir in */; do
