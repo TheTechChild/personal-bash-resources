@@ -171,4 +171,11 @@ install_development_tools() {
     sudo ln -s /usr/local/bin/gtimeout /usr/local/bin/timeout
     echo "coreutils installed successfully"
   fi
+
+  # Check and install java via brew
+  if ! command -v java &> /dev/null; then
+    echo "Java not found, installing..."
+    brew install openjdk@17
+    echo "Java installed successfully"
+  fi
 }

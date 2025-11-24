@@ -27,6 +27,17 @@ alias ddog='datadog-js'
 # docker aliases
 alias dsp='docker system prune'
 
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/clayton.noyes/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+
+# pyenv setup
+eval "$(pyenv init -)"
+
+# python aliases
+alias python2='python'
+
 # git functions
 function git-update-subfolders() {
   for dir in */; do
@@ -103,9 +114,6 @@ function install_dependencies() {
     done
 }
 
-# python aliases
-alias python2='python'
-
 function install-global-git-ignore() {
   # Check if the symlink or file already exists
   if [ -e ~/.gitignore_global ]; then
@@ -132,3 +140,6 @@ function install-global-git-ignore() {
 # bun completions
 [ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
 if [ -f "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc" ]; then . "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc"; fi
+
+# claude
+alias claude="/Users/clayton.noyes/.claude/local/claude"
