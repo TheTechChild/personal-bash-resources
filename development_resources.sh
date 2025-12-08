@@ -21,9 +21,6 @@ function aws-login {
 alias ll='ls -la'
 alias rsrc='source ~/.zshrc'
 
-# datadog alias
-alias ddog='datadog-js'
-
 # docker aliases
 alias dsp='docker system prune'
 
@@ -39,7 +36,53 @@ eval "$(pyenv init -)"
 alias python2='python'
 
 # git functions
+
+# Parallel version - updates all repos simultaneously without branch switching
 function git-update-subfolders() {
+  local pids=()
+
+  for dir in */; do
+    if [[ -d "$dir" && -d "${dir}/.git" ]]; then
+      (
+        cd "$dir" || exit
+
+        # Determine trunk branch
+        local trunk_branch=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null | sed 's/origin\///')
+        if [[ -z "$trunk_branch" || "$trunk_branch" == "HEAD" ]]; then
+          if git show-ref --verify --quiet refs/heads/main; then
+            trunk_branch="main"
+          else
+            trunk_branch="master"
+          fi
+        fi
+
+        git fetch --prune --quiet
+
+        local current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+        # Update current branch if behind
+        if git status -uno | grep -q 'Your branch is behind'; then
+          git pull --ff-only --quiet && echo "$dir: pulled $current_branch"
+        fi
+
+        # Update trunk without checkout
+        if [[ "$current_branch" != "$trunk_branch" ]]; then
+          git fetch origin "$trunk_branch:$trunk_branch" 2>/dev/null && echo "$dir: updated $trunk_branch"
+        fi
+      ) &
+      pids+=($!)
+    fi
+  done
+
+  # Wait for all background jobs
+  for pid in "${pids[@]}"; do
+    wait "$pid"
+  done
+
+  echo "All repos updated."
+}
+
+function git-update-subfolders-sequential() {
   for dir in */; do
     if [[ -d "$dir" && -d "${dir}/.git" ]]; then
       echo "Entering $dir"
