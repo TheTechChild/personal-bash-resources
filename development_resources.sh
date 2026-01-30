@@ -183,6 +183,3 @@ function install-global-git-ignore() {
 # bun completions
 [ -s "/Users/claytonnoyes/.bun/_bun" ] && source "/Users/claytonnoyes/.bun/_bun"
 if [ -f "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc" ]; then . "/Users/claytonnoyes/.config/fabric/fabric-bootstrap.inc"; fi
-
-# claude
-alias claude="/Users/clayton.noyes/.claude/local/claude"

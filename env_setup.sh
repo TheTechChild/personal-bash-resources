@@ -134,20 +134,21 @@ install_development_languages() {
   fi
 }
 
-# Install development tools (Claude Code, Cursor, Neovim, iTerm2)
+# Install development tools (OpenCode, Cursor, Neovim, iTerm2)
 install_development_tools() {
-  # Check and install Claude Code CLI
-  if ! command -v claude &> /dev/null; then
-    echo "Claude Code CLI not found, installing..."
-    brew install claude
-    echo "Claude Code CLI installed successfully"
+  # Check and install OpenCode CLI
+  if ! command -v opencode &> /dev/null; then
+    echo "OpenCode CLI not found, installing..."
+    curl -fsSL https://opencode.ai/install | bash
+    npm install -g oh-my-opencode@latest
+    echo "OpenCode CLI installed successfully"
   fi
 
-  # Check and install Cursor
-  if ! command -v cursor &> /dev/null; then
-    echo "Cursor not found, installing..."
-    brew install --cask cursor
-    echo "Cursor installed successfully"
+  # Check and install VS Code
+  if ! [ -d "/Applications/Visual Studio Code.app" ]; then
+    echo "VS Code not found, installing..."
+    brew install --cask visual-studio-code
+    echo "VS Code installed successfully"
   fi
 
   # Check and install Neovim
@@ -177,5 +178,26 @@ install_development_tools() {
     echo "Java not found, installing..."
     brew install openjdk@17
     echo "Java installed successfully"
+  fi
+}
+
+install_macos_utilities() {
+  # MonitorControl - Control external display brightness/volume via DDC
+  # https://github.com/MonitorControl/MonitorControl
+  if ! [ -d "/Applications/MonitorControl.app" ]; then
+    echo "MonitorControl not found, installing..."
+    brew install --cask monitorcontrol
+    echo "MonitorControl installed successfully"
+    echo ""
+    echo "MonitorControl Configuration Required:"
+    echo "1. Open MonitorControl from Applications"
+    echo "2. Grant Accessibility permissions when prompted"
+    echo "3. Settings > Keyboard:"
+    echo "   - Volume control: 'Standard keyboard volume and mute keys'"
+    echo "   - Screen to control: Select your monitor or 'Change for all screens'"
+    echo "4. Settings > Displays > [Your Monitor]:"
+    echo "   - Check 'Disable macOS volume OSD'"
+    echo "   - Enable 'Show advanced settings' and click 'Get current' for audio device name"
+    echo "5. Quit and relaunch MonitorControl"
   fi
 }
