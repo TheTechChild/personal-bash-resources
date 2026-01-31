@@ -8,7 +8,8 @@ This repository includes a diverse set of bash scripts and functions that can he
 
 - **Media Manipulation**: Automate tasks like converting, resizing, or organizing media files.
 - **File and Directory Management**: Simplify tasks such as renaming, moving, or organizing files and directories.
-- **Development Environment Setup**: Set up development environment for different languages
+- **Development Environment Setup**: Set up development environments for different languages across macOS and Arch Linux.
+- **Gaming Setup**: Full Arch Linux gaming environment with Hyprland/DWM, Steam, Lutris, and more.
 
 ### Original Purpose
 
@@ -30,49 +31,131 @@ PBR_DIR=$HOME/personal-bash-resources
 source $PBR_DIR/main.sh
 ```
 
+## Architecture
+
+PBR uses a platform-aware modular architecture. `main.sh` detects the current platform and loads the appropriate modules automatically.
+
+```
+personal-bash-resources/
+  main.sh                    # Entry point: detects platform, sources modules
+  shared/                    # Cross-platform code (loaded on all systems)
+    aliases.sh               # Shell aliases (ll, rsrc, tf, etc.)
+    aws.sh                   # AWS CLI helpers (aws-login)
+    file_utilities.sh        # File operations (tch, backup-pbr, restore-pbr-extensions)
+    git_functions.sh         # Git helpers (git-update-subfolders, install_dependencies)
+    media_utilities.sh       # Media conversion (convert_webp_to_jpg, embed_album_art)
+  platforms/
+    macos/                   # macOS-specific modules
+      init.sh                # Sources all macOS modules in order
+      path.sh                # Homebrew PATH entries, PYENV_ROOT, PNPM
+      env.sh                 # NVM/BUN/PNPM init, pyenv/rbenv, Docker completions
+      ssh.sh                 # ssh-add --apple-use-keychain
+      install.sh             # Dev language/tool installers via Homebrew
+      gaming.sh              # OpenEmu alias
+    linux-arch/              # Arch Linux-specific modules
+      init.sh                # Sources all Arch modules in order
+      path.sh                # Linux PATH entries, XDG-compliant paths
+      env.sh                 # pyenv/rbenv init, nvm from pacman path
+      ssh.sh                 # keychain or ssh-agent fallback
+      install.sh             # Dev language/tool installers via pacman/paru
+      gaming.sh              # Full Arch gaming setup (Hyprland, DWM, Steam, Lutris, etc.)
+  extensions/                # User-specific configs (gitignored)
+    index.sh                 # Auto-loads all .sh files in extensions/
+    *.sh                     # Your custom configs go here
+```
+
+### Platform Detection
+
+`main.sh` exports `PBR_PLATFORM` with one of these values:
+
+| Value | Detected When |
+|-------|---------------|
+| `macos` | `uname -s` returns `Darwin` |
+| `linux-arch` | Linux + `pacman` found in PATH |
+| `linux-unknown` | Linux without pacman |
+| `unknown` | Everything else |
+
+Use `$PBR_PLATFORM` in your extensions for platform-specific logic:
+```bash
+case "$PBR_PLATFORM" in
+    macos)      echo "Running on macOS" ;;
+    linux-arch) echo "Running on Arch" ;;
+esac
+```
+
 ### Getting Started
 
-**Please note** - this repository is designed for MacOS and Linux. There are no plans to adapt it for Windows usage.
+**Supported platforms**: macOS, Arch Linux. No Windows support planned.
 
-If you use a .bashrc or some other shell configuration for your shell then you will need to substitute the appropriate shell configuration filename in the following commands: `.zshrc` becomes `.bashrc`
+If you use `.bashrc` instead of `.zshrc`, substitute accordingly.
 
-**Please note** - The following commands to get started will install this repository to your home directory in your shell. This is intentional as this will put it next to where the bashrc or zshrc or other shell configuration file will most likely be installed. However, you can update the following commands to install it wherever you would like. Just be sure to double check that you use the same exact location in both steps 1 and 2, and you will need to change step 1 so that the INSTALL_LOCATION variable goes to wherever you want it to go.
-
-1. Set a temporary bash variable to store the location where personal bash resources will be installed, by default this command will try to install it in your home directory
+1. Set the install location:
    ```
    INSTALL_LOCATION=$HOME
    ```
 
-2. Clone the repository to the location specified by `INSTALL_LOCATION`:
+2. Clone the repo:
    ```
    git clone https://github.com/TheTechChild/personal-bash-resources.git $INSTALL_LOCATION/personal-bash-resources
    ```
 
-3. Use the following terminal commands to update your .zshrc file and integrate personal bash resources into your shell configuration, giving you access to these goodies:
+3. Add to your shell config:
    ```
-   echo "PBR_DIR=$INSTALL_LOCATION" >> ~/.zshrc
-   echo "source $INSTALL_LOCATION/personal-bash-resources/main.sh" >> ~/.zshrc
+   echo "PBR_DIR=$INSTALL_LOCATION/personal-bash-resources" >> ~/.zshrc
+   echo 'source $PBR_DIR/main.sh' >> ~/.zshrc
    ```
 
-4. Reload your shell configuration:
+4. Reload:
    ```
    source ~/.zshrc
    ```
 
+### Extensions
+
+The `extensions/` directory is gitignored (except `index.sh`) and is where you put machine-specific or sensitive configurations. Any `.sh` file dropped in there is automatically sourced on shell startup.
+
+Use `$PBR_PLATFORM` inside extensions to handle platform differences without duplicating files.
+
+## Key Functions
+
+### Development Environment
+- `install_development_languages` - Install Ruby (rbenv), Python (pyenv), Node.js (nvm), Zig, Bun, Elixir, Poetry, Yarn
+- `install_development_tools` - Install editors (VS Code, Neovim), Java, Docker, and more
+
+### Git
+- `gp` / `gpl` / `gco` / `gcb` / `gcm` / `gdel` - Common git aliases
+- `git-update-subfolders` - Update all git repos in subdirectories
+- `install_dependencies` - Run yarn install in specified subdirectories
+- `install-global-git-ignore` - Configure global gitignore
+
+### File Utilities
+- `tch` - Create file and open in editor
+- `backup-pbr` - Backup extensions directory
+- `restore-pbr-extensions` - Restore extensions from backup
+
+### Media
+- `convert_webp_to_jpg` - Convert WebP images to JPG
+- `embed_album_art` - Add album art to MP3 files
+
+### Arch Linux Gaming (linux-arch only)
+- `arch-setup-base` - Base packages, AUR helper, networking
+- `arch-setup-shell` - Zsh, Oh My Zsh, Starship prompt
+- `arch-setup-desktop-hyprland` - Hyprland desktop environment
+- `arch-setup-desktop-dwm` - DWM desktop environment
+- `arch-setup-gaming` - Steam, Lutris, MangoHud, AMD GPU drivers
+- `arch-setup-vm` - Virtual machine support (QEMU/KVM)
+- `arch-setup-all` - Run all setup phases
+
 ## Usage
 
-Each script or function is documented with usage instructions. To see a list of available functions, you can run: `list-functions`
+List available functions: `list-functions`
 
-For detailed usage of a specific function, use: `function-name --help`
+Get help for a function: `function-name --help`
 
 ## Contributing
 
-Contributions are welcome! If you have a bash function or script that you think would be a great addition, feel free to fork the repository and submit a pull request.
+Contributions are welcome! Fork the repository and submit a pull request.
 
 ## License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
-
----
-
-Feel free to customize this README to better fit your specific needs and the unique features of your repository. If you have any questions or need further assistance, don't hesitate to ask!

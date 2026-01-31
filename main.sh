@@ -1,18 +1,31 @@
 #!/bin/bash
 
-# Determine the directory of this main.sh file
 PBR_DIR="$HOME/personal-bash-resources"
 
-# Import different bash modules from this repository
-source "$PBR_DIR/env_setup.sh"
-source "$PBR_DIR/development_resources.sh"
-source "$PBR_DIR/gaming_utilities.sh"
-source "$PBR_DIR/file_utilities.sh"
-source "$PBR_DIR/media_utilities.sh"
-source "$PBR_DIR/extensions/index.sh"
-source "$PBR_DIR/path.sh"
+# Detect platform
+case "$(uname -s)" in
+    Darwin)  PBR_PLATFORM="macos" ;;
+    Linux)
+        if command -v pacman &>/dev/null; then
+            PBR_PLATFORM="linux-arch"
+        else
+            PBR_PLATFORM="linux-unknown"
+        fi
+        ;;
+    *)       PBR_PLATFORM="unknown" ;;
+esac
+export PBR_PLATFORM
 
-# Arch Linux setup functions (only loaded if pacman is available)
-if command -v pacman &>/dev/null; then
-    source "$PBR_DIR/arch_setup.sh"
+# Source shared modules
+for _pbr_f in "$PBR_DIR/shared"/*.sh; do
+    [[ -f "$_pbr_f" ]] && source "$_pbr_f"
+done
+unset _pbr_f
+
+# Source platform-specific modules
+if [[ -f "$PBR_DIR/platforms/$PBR_PLATFORM/init.sh" ]]; then
+    source "$PBR_DIR/platforms/$PBR_PLATFORM/init.sh"
 fi
+
+# Source extensions (last — user overrides take priority)
+source "$PBR_DIR/extensions/index.sh"

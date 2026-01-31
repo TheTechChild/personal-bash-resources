@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export PATH="$PATH:${GOPATH}/bin"
 export PATH="$PATH:/Users/$USER/.local/bin"
 export PATH=$PATH:$ANDROID_HOME/platform-tools
@@ -10,12 +12,10 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.docker/bin:$PATH"
 
-# pnpm setup
 case ":$PATH:" in
 *":$PNPM_HOME:"*) ;;
 *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-# pyenv setup
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
