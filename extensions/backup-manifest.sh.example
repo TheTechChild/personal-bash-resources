@@ -1,0 +1,25 @@
+#!/bin/bash
+# PBR Backup Manifest
+#
+# This file tells backup-pbr which external folders to include in your backup.
+# Rename this file to backup-manifest.sh and uncomment/add entries below.
+#
+# Run: backup-pbr-init   (copies this example for you)
+#
+# Format: "label|macos_path|linux_path"
+#   - label:      Short name used in the backup archive (no spaces or slashes)
+#   - macos_path: Absolute path on macOS (use ~ for home directory)
+#   - linux_path: Absolute path on Linux (use ~ for home directory)
+#
+# The backup will include these folders alongside your extensions.
+# On restore, files are placed at the correct path for your current platform.
+#
+# WARNING: If you include SSH keys or tokens, the backup will be encrypted
+# by default. You MUST remember the password — there is no recovery.
+
+PBR_BACKUP_ITEMS=(
+    # "ssh|~/.ssh|~/.ssh"
+    # "opencode|~/.config/opencode|~/.config/opencode"
+    # "oh-my-opencode|~/.config/oh-my-opencode|~/.config/oh-my-opencode"
+    # "gh-cli|~/.config/gh|~/.config/gh"
+)
