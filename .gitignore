@@ -6,6 +6,8 @@ scripts/*
 # allow for users to add their own shell configuration
 extensions/*
 !extensions/index.sh
+!extensions/backup-manifest.sh.example
 
 # ignore backup files
 *.zip
+*.enc
