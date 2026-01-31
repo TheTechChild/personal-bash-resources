@@ -614,6 +614,75 @@ STOPSH
 }
 
 # ---------------------------------------------------------------------------
+# Phase: Desktop Applications
+# ---------------------------------------------------------------------------
+
+arch-setup-apps() {
+    _arch_print_header "Phase: Desktop Applications"
+
+    local helper
+    helper=$(_arch_check_aur_helper)
+    if [[ -z "$helper" ]]; then
+        echo "ERROR: No AUR helper (paru/yay) found. Run arch-setup-base first."
+        return 1
+    fi
+
+    # ── Browsers ──────────────────────────────────────────────
+    _arch_print_step "Installing browsers"
+    _arch_install_packages firefox
+    _arch_install_aur_packages brave-bin
+
+    # ── Communication ─────────────────────────────────────────
+    _arch_print_step "Installing communication apps"
+    _arch_install_packages discord
+    _arch_install_aur_packages \
+        slack-desktop \
+        zoom
+
+    # ── Media ─────────────────────────────────────────────────
+    _arch_print_step "Installing media apps"
+    _arch_install_packages \
+        vlc \
+        obs-studio
+
+    # ── Music ─────────────────────────────────────────────────
+    _arch_print_step "Installing Spotify"
+    if command -v spotify-launcher &>/dev/null; then
+        _arch_print_step "spotify-launcher already installed — skipping"
+    else
+        _arch_install_packages spotify-launcher
+    fi
+
+    # ── AI / Productivity ─────────────────────────────────────
+    _arch_print_step "Installing Claude Desktop"
+    _arch_install_aur_packages claude-desktop-bin
+
+    # ── Security ──────────────────────────────────────────────
+    _arch_print_step "Installing 1Password"
+    _arch_install_aur_packages 1password
+
+    # ── Docker TUI ────────────────────────────────────────────
+    _arch_print_step "Installing LazyDocker (terminal Docker UI)"
+    _arch_install_aur_packages lazydocker
+
+    _arch_print_step "Installing LazyGit (terminal Git UI)"
+    _arch_install_packages lazygit
+
+    # ── Summary ───────────────────────────────────────────────
+    _arch_print_header "Desktop Applications Setup Complete"
+    echo "Installed (official): firefox, discord, vlc, obs-studio, spotify-launcher, lazygit"
+    echo "Installed (AUR):      brave-bin, slack-desktop, zoom, claude-desktop-bin, 1password, lazydocker"
+    echo ""
+    echo "Manual steps:"
+    echo "  - 1Password browser integration:"
+    echo "      Add your browser to /opt/1Password/resources/custom_allowed_browsers"
+    echo "      e.g.: echo 'brave' | sudo tee -a /opt/1Password/resources/custom_allowed_browsers"
+    echo "  - Spotify: Run 'spotify-launcher' to complete first-time setup"
+    echo "  - LazyDocker: Run 'lazydocker' in any terminal"
+    echo "  - LazyGit: Run 'lazygit' in any git repo"
+}
+
+# ---------------------------------------------------------------------------
 # Phase: All (guided full setup)
 # ---------------------------------------------------------------------------
 
@@ -624,7 +693,8 @@ arch-setup-all() {
     echo "  1. Base system (paru, snapper, base-devel)"
     echo "  2. Shell environment (zsh, starship, CTT mybash)"
     echo "  3. Desktop environment (choose Hyprland or DWM)"
-    echo "  4. Gaming (Steam, AMD drivers, Lutris)"
+    echo "  4. Desktop applications (browsers, comms, media, dev tools)"
+    echo "  5. Gaming (Steam, AMD drivers, Lutris)"
     echo ""
     echo "Note: VM passthrough is excluded (hardware-specific). Run arch-setup-vm separately."
     echo ""
@@ -661,6 +731,8 @@ arch-setup-all() {
             echo "Invalid selection — skipping desktop setup."
             ;;
     esac
+
+    arch-setup-apps || { echo "Desktop apps setup failed."; return 1; }
 
     arch-setup-gaming || { echo "Gaming setup failed."; return 1; }
 
