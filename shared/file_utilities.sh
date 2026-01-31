@@ -23,7 +23,7 @@ backup-pbr() {
     fi
 
     echo "Creating backup of extensions folder..."
-    zip -r "$zip_file" -j "$PBR_DIR/extensions"
+    (cd "$PBR_DIR" && zip -r "$zip_file" extensions/ -x "extensions/.DS_Store")
 
     if [ $? -eq 0 ]; then
         echo "Backup created successfully: $zip_file"
@@ -34,9 +34,7 @@ backup-pbr() {
 }
 
 restore-pbr-extensions() {
-    local temp_dir="/tmp/pbr_restore_temp"
-
-    local latest_backup=$(find "$PBR_DIR" -name "extensions_backup_*.zip" | sort -r | head -n 1)
+    local latest_backup=$(find "$PBR_DIR" -maxdepth 1 -name "extensions_backup_*.zip" | sort -r | head -n 1)
 
     if [ -z "$latest_backup" ]; then
         echo "Error: No backup files found in $PBR_DIR"
@@ -45,29 +43,13 @@ restore-pbr-extensions() {
     fi
 
     echo "Found latest backup: $latest_backup"
-
-    mkdir -p "$temp_dir"
-
-    echo "Extracting backup file..."
-    unzip -q "$latest_backup" -d "$temp_dir"
-
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to extract the zip file."
-        rm -rf "$temp_dir"
-        return 1
-    fi
-
     echo "Restoring extensions folder..."
-    cp -R "$temp_dir/"* "$PBR_DIR/extensions"
+    unzip -qo "$latest_backup" -d "$PBR_DIR"
 
     if [ $? -eq 0 ]; then
         echo "Extensions folder restored successfully."
     else
-        echo "Error: Failed to restore extensions folder."
-        rm -rf "$temp_dir"
+        echo "Error: Failed to extract the zip file."
         return 1
     fi
-
-    rm -rf "$temp_dir"
-    echo "Restore operation completed."
 }
