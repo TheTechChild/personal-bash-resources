@@ -11,3 +11,8 @@ source "$PBR_DIR/file_utilities.sh"
 source "$PBR_DIR/media_utilities.sh"
 source "$PBR_DIR/extensions/index.sh"
 source "$PBR_DIR/path.sh"
+
+# Arch Linux setup functions (only loaded if pacman is available)
+if command -v pacman &>/dev/null; then
+    source "$PBR_DIR/arch_setup.sh"
+fi
