@@ -10,7 +10,7 @@ tch() {
 
     touch "$filename"
 
-    cursor "$filename"
+    code "$filename"
 }
 
 backup-pbr() {
