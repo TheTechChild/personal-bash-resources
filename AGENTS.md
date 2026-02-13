@@ -59,15 +59,18 @@ restore-pbr-extensions /path/to/backup.zip
 ### Module Patterns
 - **Error Handling**: Check for required arguments/tools
 - **Platform Support**: macOS and Linux only
-- **Path Management**: All PATH modifications in `path.sh`
+- **Path Management**: All PATH modifications in `path.sh` (minimal on Arch — system paths only)
 - **Tool Detection**: Use `command -v` to check if tools exist
+- **Arch Linux**: Prefer system packages via pacman over version managers. Use `.venv` for Python, Docker for isolated environments.
 
 ## Key Features
 
 ### Development Environment
-- **Languages**: Ruby (rbenv), Python (pyenv), Node.js (nvm), Zig, Bun, Elixir
-- **Package Managers**: Homebrew, Poetry, pnpm, yarn
-- **Cloud/Infra**: AWS CLI, Terraform, Datadog
+- **Arch Linux philosophy**: System packages via pacman. No version managers by default.
+- **macOS philosophy**: Homebrew + version managers (nvm, pyenv, rbenv) via platform modules.
+- **Opt-in complexity**: Version managers available via `extensions/version-managers.sh.example` for machines that need them.
+- **Languages available via pacman**: Python, Node.js, Rust, Zig, Bun, Elixir, Go
+- **Cloud/Infra**: Docker, kubectl, AWS CLI (install via pacman when needed)
 
 ### Git Aliases
 - `gp`: git push
@@ -92,5 +95,7 @@ restore-pbr-extensions /path/to/backup.zip
 ## Important Notes
 - SSH keys auto-added to keychain on startup
 - Global gitignore configured automatically
-- NVM lazy-loaded from Homebrew location
+- NVM lazy-loaded from Homebrew location (macOS only — not used on Arch)
 - Extensions not tracked in git (add sensitive data here)
+- On Arch: version managers are opt-in via extensions, not loaded by default
+- Example extensions: `version-managers.sh.example`, `backup-manifest.sh.example`
