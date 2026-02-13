@@ -24,7 +24,7 @@ Personal Bash Resources (PBR) is a modular shell configuration management system
 ### Testing Changes
 ```bash
 # Reload shell configuration after changes
-source ~/.zshrc  # or source ~/.bashrc
+source ~/.bashrc  # or source ~/.bashrc
 
 # List available functions
 list-functions

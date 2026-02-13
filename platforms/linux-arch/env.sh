@@ -25,3 +25,6 @@ fi
 if [ -f "$HOME/.config/fabric/fabric-bootstrap.inc" ]; then
   . "$HOME/.config/fabric/fabric-bootstrap.inc"
 fi
+
+eval "$(dircolors -b)"
+export LS_COLORS="$LS_COLORS:ow=1;34"
