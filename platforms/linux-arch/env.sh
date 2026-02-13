@@ -1,30 +1,15 @@
 #!/bin/bash
+# Arch Linux shell environment — system-package-first philosophy.
+#
+# Version managers (nvm, pyenv, rbenv, etc.) are NOT initialized here.
+# Use system packages via pacman. If a specific machine needs version managers,
+# add them via an extension — see extensions/version-managers.sh.example.
 
-export NVM_DIR="$HOME/.nvm"
-export BUN_INSTALL="$HOME/.bun"
-export PNPM_HOME="$HOME/.local/share/pnpm"
-export PYENV_ROOT="$HOME/.pyenv"
+# ── Colors ───────────────────────────────────────────────
+eval "$(dircolors -b)"
+export LS_COLORS="$LS_COLORS:ow=1;34"
 
-if command -v pyenv >/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-if command -v rbenv &>/dev/null; then
-  eval "$(rbenv init -)"
-fi
-
-# nvm from pacman installs to /usr/share/nvm
-if [[ -s /usr/share/nvm/init-nvm.sh ]]; then
-  source /usr/share/nvm/init-nvm.sh
-elif [[ -s "$NVM_DIR/nvm.sh" ]]; then
-  source "$NVM_DIR/nvm.sh"
-fi
-
-[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
-
+# ── Optional tool bootstraps ────────────────────────────
 if [ -f "$HOME/.config/fabric/fabric-bootstrap.inc" ]; then
   . "$HOME/.config/fabric/fabric-bootstrap.inc"
 fi
-
-eval "$(dircolors -b)"
-export LS_COLORS="$LS_COLORS:ow=1;34"

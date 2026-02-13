@@ -7,6 +7,7 @@ scripts/*
 extensions/*
 !extensions/index.sh
 !extensions/backup-manifest.sh.example
+!extensions/version-managers.sh.example
 
 # ignore backup files
 *.zip
