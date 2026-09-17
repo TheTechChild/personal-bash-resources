@@ -1,8 +1,14 @@
 #!/bin/bash
-# Version Manager Extension (opt-in)
+# Legacy Version Manager Extension (opt-in)
 #
-# PBR defaults to system packages via pacman. If a machine needs
-# language version managers (nvm, pyenv, rbenv, etc.), copy this file:
+# PBR uses mise for language versions. See shared/mise.sh. You do not need
+# this file for normal work.
+#
+# Use it only if a machine must keep nvm, pyenv, or rbenv — for example, a
+# team script that calls `nvm use` directly. Do not load a legacy manager and
+# mise for the same language: the two fight for the same PATH entry.
+#
+# To use it, copy this file:
 #
 #   cp extensions/version-managers.sh.example extensions/version-managers.sh
 #

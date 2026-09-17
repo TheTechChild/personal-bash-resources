@@ -8,7 +8,7 @@ This repository includes a diverse set of bash scripts and functions that can he
 
 - **Media Manipulation**: Automate tasks like converting, resizing, or organizing media files.
 - **File and Directory Management**: Simplify tasks such as renaming, moving, or organizing files and directories.
-- **Development Environment Setup**: Set up development environments for different languages across macOS and Arch Linux.
+- **Development Environment Setup**: Set up development environments for different languages across macOS and Arch Linux. One version manager, [mise](https://mise.jdx.dev), controls all of them.
 - **Gaming Setup**: Full Arch Linux gaming environment with Hyprland/DWM, Steam, Lutris, and more.
 
 ### Original Purpose
@@ -44,20 +44,21 @@ personal-bash-resources/
     file_utilities.sh        # File operations (tch, backup-pbr, restore-pbr-extensions)
     git_functions.sh         # Git helpers (git-update-subfolders, install_dependencies)
     media_utilities.sh       # Media conversion (convert_webp_to_jpg, embed_album_art)
+    mise.sh                  # mise activation + language list (replaces nvm/pyenv/rbenv)
   platforms/
     macos/                   # macOS-specific modules
       init.sh                # Sources all macOS modules in order
-      path.sh                # Homebrew PATH entries, PYENV_ROOT, PNPM
-      env.sh                 # NVM/BUN/PNPM init, pyenv/rbenv, Docker completions
+      path.sh                # Homebrew PATH entries, PNPM
+      env.sh                 # BUN/PNPM init, mise activation, Docker completions
       ssh.sh                 # ssh-add --apple-use-keychain
-      install.sh             # Dev language/tool installers via Homebrew
+      install.sh             # mise for languages, Homebrew for applications
       gaming.sh              # OpenEmu alias
     linux-arch/              # Arch Linux-specific modules
       init.sh                # Sources all Arch modules in order
       path.sh                # Linux PATH entries, XDG-compliant paths
-      env.sh                 # pyenv/rbenv init, nvm from pacman path
+      env.sh                 # mise activation, colors
       ssh.sh                 # keychain or ssh-agent fallback
-      install.sh             # Dev language/tool installers via pacman/paru
+      install.sh             # mise for languages, pacman/paru for applications
       gaming.sh              # Full Arch gaming setup (Hyprland, DWM, Steam, Lutris, etc.)
   extensions/                # User-specific configs (gitignored)
     index.sh                 # Auto-loads all .sh files in extensions/
@@ -118,8 +119,34 @@ Use `$PBR_PLATFORM` inside extensions to handle platform differences without dup
 
 ## Key Functions
 
+### Version Management (mise)
+
+PBR uses [mise](https://mise.jdx.dev) for all language versions. One tool
+replaces nvm, pyenv, and rbenv.
+
+mise reads these files, and it changes the version when you change directory:
+`mise.toml`, `.tool-versions`, `.nvmrc`, `.node-version`, `.ruby-version`,
+`.python-version`.
+
+| Task | Command |
+|------|---------|
+| Set a version for a project | `mise use node@20.16.0` |
+| Set a default for the machine | `mise use -g node@22` |
+| Install the versions a repo asks for | `mise install` |
+| Show the versions in use here | `mise current` |
+| Run a tool without a shell restart | `mise exec -- terraform version` |
+
+mise activates in `platforms/$PBR_PLATFORM/env.sh`, after `path.sh`. The
+`pbr-mise-activate` function in `shared/mise.sh` does the work, and it does
+nothing if mise is absent.
+
+**Coming from nvm, pyenv, or rbenv**: remove their `init` lines from your
+shell config first. Two managers on one PATH give problems that are difficult
+to find. `extensions/version-managers.sh.example` keeps the old code, if one
+machine still needs it.
+
 ### Development Environment
-- `install_development_languages` - Install Ruby (rbenv), Python (pyenv), Node.js (nvm), Zig, Bun, Elixir, Poetry, Yarn
+- `install_development_languages` - Install Ruby, Python, Node.js, Zig, Bun, Elixir, Poetry, and Yarn with [mise](https://mise.jdx.dev)
 - `install_development_tools` - Install editors (VS Code, Neovim), Java, Docker, and more
 
 ### Git

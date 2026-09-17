@@ -1,13 +1,16 @@
 #!/bin/bash
-# Arch Linux shell environment — system-package-first philosophy.
+# Arch Linux shell environment.
 #
-# Version managers (nvm, pyenv, rbenv, etc.) are NOT initialized here.
-# Use system packages via pacman. If a specific machine needs version managers,
-# add them via an extension — see extensions/version-managers.sh.example.
+# mise manages the language versions. It replaces nvm, pyenv, and rbenv.
+# Everything else comes from a system package via pacman or paru.
 
 # ── Colors ───────────────────────────────────────────────
 eval "$(dircolors -b)"
 export LS_COLORS="$LS_COLORS:ow=1;34"
+
+# ── mise ────────────────────────────────────────────────
+# Comes after path.sh, so that the mise shims stay in front. See shared/mise.sh.
+pbr-mise-activate
 
 # ── Optional tool bootstraps ────────────────────────────
 if [ -f "$HOME/.config/fabric/fabric-bootstrap.inc" ]; then
