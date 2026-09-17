@@ -21,130 +21,23 @@ install_development_languages() {
     fi
   fi
 
-  if ! command -v rbenv &>/dev/null; then
-    echo "rbenv not found, installing..."
-    brew install rbenv
-    if ! command -v rbenv &>/dev/null; then
-      echo "ERROR: rbenv failed to install"
-      _failed+=("rbenv")
-    else
-      rbenv init
-      eval "$(rbenv init -)"
+  if ! command -v mise &>/dev/null; then
+    echo "mise not found, installing..."
+    brew install mise
+    if ! command -v mise &>/dev/null; then
+      echo "ERROR: mise failed to install"
+      return 1
     fi
   fi
 
-  if command -v rbenv &>/dev/null; then
-    latest_ruby=$(rbenv install -l | grep -v - | tail -1)
-    if ! rbenv versions | grep -q "$latest_ruby"; then
-      echo "Ruby $latest_ruby not found, installing..."
-      if ! rbenv install "$latest_ruby"; then
-        echo "ERROR: Ruby $latest_ruby failed to install"
-        _failed+=("ruby-$latest_ruby")
-      else
-        rbenv global "$latest_ruby"
-      fi
-    fi
-  fi
+  # mise installs Ruby, Python, Node, Zig, Elixir, Bun, Poetry, and Yarn.
+  # It replaces rbenv, pyenv, and nvm. See shared/mise.sh.
+  _pbr_mise_install_languages
 
-  if ! command -v pyenv &>/dev/null; then
-    echo "pyenv not found, installing..."
-    brew install pyenv
-    if ! command -v pyenv &>/dev/null; then
-      echo "ERROR: pyenv failed to install"
-      _failed+=("pyenv")
-    else
-      eval "$(pyenv init -)"
-    fi
-  fi
-
-  if command -v pyenv &>/dev/null && ! command -v python3 &>/dev/null; then
-    echo "Python3 not found, installing..."
-    latest_python=$(pyenv install --list | grep -v - | grep -v dev | grep -v a | grep -v b | tail -1 | tr -d '[:space:]')
-    echo "Installing Python $latest_python..."
-    if ! pyenv install "$latest_python"; then
-      echo "ERROR: Python $latest_python failed to install"
-      _failed+=("python-$latest_python")
-    else
-      pyenv global "$latest_python"
-    fi
-  fi
-
-  if ! command -v zig &>/dev/null; then
-    echo "Zig not found, installing..."
-    brew install zig
-    if ! command -v zig &>/dev/null; then
-      echo "ERROR: zig failed to install"
-      _failed+=("zig")
-    fi
-  fi
-
-  if ! command -v nvm &>/dev/null; then
-    echo "nvm not found, installing..."
-    brew install nvm
-    mkdir -p ~/.nvm
-    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bash_profile
-    echo '[ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"' >> ~/.bash_profile
-    source ~/.bash_profile
-    if ! command -v nvm &>/dev/null; then
-      echo "ERROR: nvm failed to install"
-      _failed+=("nvm")
-    fi
-  fi
-
-  if command -v nvm &>/dev/null; then
-    latest_node=$(nvm ls-remote --lts | tail -1 | awk '{print $1}')
-    if [[ -n "$latest_node" ]] && ! nvm ls | grep -q "$latest_node"; then
-      echo "Node.js $latest_node not found, installing..."
-      if ! nvm install "$latest_node"; then
-        echo "ERROR: Node.js $latest_node failed to install"
-        _failed+=("node-$latest_node")
-      else
-        nvm use "$latest_node"
-        nvm alias default "$latest_node"
-      fi
-    fi
-  fi
-
-  if ! command -v poetry &>/dev/null; then
-    echo "Poetry not found, installing..."
-    curl -sSL https://install.python-poetry.org | python3 -
-    if ! command -v poetry &>/dev/null; then
-      echo "ERROR: poetry failed to install"
-      _failed+=("poetry")
-    else
-      poetry config virtualenvs.in-project true
-    fi
-  fi
-
-  if ! command -v bun &>/dev/null; then
-    echo "Bun not found, installing via Homebrew..."
-    brew tap oven-sh/bun
-    brew install bun
-    if ! command -v bun &>/dev/null; then
-      echo "ERROR: bun failed to install"
-      _failed+=("bun")
-    else
-      bun completions
-    fi
-  fi
-
-  if ! command -v yarn &>/dev/null; then
-    echo "Yarn not found, installing via NPM..."
-    npm install -g yarn
-    if ! command -v yarn &>/dev/null; then
-      echo "ERROR: yarn failed to install"
-      _failed+=("yarn")
-    fi
-  fi
-
-  if ! command -v elixir &>/dev/null; then
-    echo "Elixir not found, installing via Homebrew..."
-    brew install elixir
-    if ! command -v elixir &>/dev/null; then
-      echo "ERROR: elixir failed to install"
-      _failed+=("elixir")
-    fi
-  fi
+  # Post-install configuration. `mise exec` is necessary because the mise
+  # shims reach PATH only after the next shell start.
+  mise exec -- poetry config virtualenvs.in-project true 2>/dev/null
+  mise exec -- bun completions 2>/dev/null
 
   echo ""
   if [[ ${#_failed[@]} -gt 0 ]]; then

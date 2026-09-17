@@ -31,25 +31,26 @@ personal-bash-resources/
 │   ├── aws.sh                       # AWS SSO login helper
 │   ├── file_utilities.sh            # File ops (tch, backup-pbr, restore-pbr)
 │   ├── git_functions.sh             # Git helpers (git-update-subfolders, install_dependencies)
-│   └── media_utilities.sh           # Media conversion (webp→jpg, embed album art)
+│   ├── media_utilities.sh           # Media conversion (webp→jpg, embed album art)
+│   └── mise.sh                      # mise activation + shared language list
 ├── platforms/
 │   ├── macos/                       # macOS-specific modules
 │   │   ├── init.sh                  # Sources all macOS modules in order
-│   │   ├── path.sh                  # Homebrew PATH, PYENV_ROOT, PNPM
-│   │   ├── env.sh                   # NVM/BUN/PNPM init, pyenv/rbenv, Docker completions
+│   │   ├── path.sh                  # Homebrew PATH, PNPM
+│   │   ├── env.sh                   # BUN/PNPM init, mise activation, Docker completions
 │   │   ├── ssh.sh                   # ssh-add --apple-use-keychain
-│   │   ├── install.sh               # Dev language/tool installers via Homebrew
+│   │   ├── install.sh               # mise for languages, Homebrew for applications
 │   │   └── gaming.sh                # OpenEmu alias
 │   └── linux-arch/                  # Arch Linux-specific modules
 │       ├── init.sh                  # Sources all Arch modules in order
 │       ├── path.sh                  # Linux PATH entries, XDG-compliant paths
-│       ├── env.sh                   # pyenv/rbenv init, nvm from pacman path
+│       ├── env.sh                   # mise activation, colors
 │       ├── ssh.sh                   # keychain or ssh-agent fallback
-│       ├── install.sh               # Dev language/tool installers via pacman/paru
+│       ├── install.sh               # mise for languages, pacman/paru for applications
 │       └── gaming.sh                # Full Arch gaming setup (700+ LOC)
 ├── extensions/                      # User-specific configs (gitignored except examples)
 │   ├── index.sh                     # Auto-loads all .sh files in extensions/
-│   ├── version-managers.sh.example  # Opt-in version managers for Arch
+│   ├── version-managers.sh.example  # Legacy nvm/pyenv/rbenv escape hatch (mise is the default)
 │   └── backup-manifest.sh.example   # Backup manifest template
 ├── README.md                        # User-facing documentation
 └── archbox-build-reference.md       # Arch Linux build notes
@@ -97,6 +98,11 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 - `restore-pbr-extensions` — Alias for `restore-pbr` (backwards compatibility)
 - Internal helpers: `_pbr_resolve_path`, `_pbr_get_manifest_path`, `_pbr_platform_index`
 
+#### `shared/mise.sh`
+- `pbr-mise-activate` — Activate mise for the current shell (zsh or bash). Does nothing if mise is absent. Platform `env.sh` calls it after `path.sh`.
+- `PBR_MISE_LANGUAGES` — The language list both platforms install. Add a tool here, and macOS and Arch both get it.
+- `_pbr_mise_install_languages` — Install each missing tool from `PBR_MISE_LANGUAGES` with `mise use --global`, and enable the idiomatic version files (`.nvmrc`, `.node-version`, `.ruby-version`, `.python-version`). Appends failures to the caller's `_failed` array.
+
 #### `shared/media_utilities.sh`
 - `convert_webp_to_jpg <input.webp> <output.jpg>` — Convert WebP to JPG using ffmpeg
 - `embed_album_art <image.jpg> <mp3_dir>` — Embed album art into all MP3s in directory
@@ -107,7 +113,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 ### Platform-Specific: macOS
 
 #### `platforms/macos/install.sh`
-- `install_development_languages` — Install Ruby (rbenv), Python (pyenv), Node.js (nvm), Zig, Bun, Elixir, Poetry, Yarn via Homebrew
+- `install_development_languages` — Install mise via Homebrew, then install Ruby, Python, Node.js, Zig, Bun, Elixir, Poetry, and Yarn with `mise use --global`
 - `install_development_tools` — Install VS Code, Neovim, Java, Docker, kubectl, AWS CLI, Terraform, etc.
 - `install_macos_utilities` — Install macOS-specific tools (Rectangle, Alfred, etc.)
 
@@ -117,7 +123,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 ### Platform-Specific: Arch Linux
 
 #### `platforms/linux-arch/install.sh`
-- `install_development_languages` — Install Python, Node.js, Rust, Zig, Bun, Elixir, Go via pacman/paru (system packages, no version managers by default)
+- `install_development_languages` — Install mise via pacman/paru, then install Ruby, Python, Node.js, Zig, Bun, Elixir, Poetry, and Yarn with `mise use --global`
 - `install_development_tools` — Install Neovim, Docker, kubectl, AWS CLI, Terraform, etc. via pacman/paru
 
 #### `platforms/linux-arch/gaming.sh` (700+ LOC)
@@ -152,14 +158,15 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 - Provide usage messages when arguments are missing
 
 ### Platform Philosophy
-- **macOS**: Homebrew + version managers (nvm, pyenv, rbenv) via platform modules
-- **Arch Linux**: System packages via pacman/paru. No version managers by default. Use `.venv` for Python, Docker for isolated environments.
-- **Opt-in complexity**: Version managers available via `extensions/version-managers.sh.example` for machines that need them
+- **Language versions**: mise on every platform. It replaces nvm, pyenv, and rbenv, and it reads `mise.toml`, `.tool-versions`, `.nvmrc`, `.node-version`, `.ruby-version`, and `.python-version`.
+- **Everything else**: the system package manager — Homebrew on macOS, pacman/paru on Arch. Applications, drivers, and libraries do not belong in mise.
+- **Escape hatch**: `extensions/version-managers.sh.example` keeps the old nvm/pyenv/rbenv code for a machine that still needs it. Do not run a legacy manager and mise for the same language.
 
 ### Path Management
 - All PATH modifications in `platforms/*/path.sh`
-- Minimal on Arch — system paths only (version managers opt-in via extensions)
-- macOS: Homebrew, PYENV_ROOT, PNPM, etc.
+- Minimal on Arch — system paths only
+- macOS: Homebrew, PNPM, Android SDK, etc.
+- **Order matters**: `pbr-mise-activate` runs in `env.sh`, after `path.sh`, so that the mise shims stay in front of Homebrew and the system directories. Do not move it into `shared/`, because `shared/*.sh` loads before `path.sh`.
 
 ### Extensions
 - `extensions/` is gitignored (except `index.sh` and `.example` files)
@@ -182,15 +189,15 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 
 ### macOS
 - **Homebrew required** — All installers depend on Homebrew
-- **Version managers lazy-loaded** — NVM sourced from Homebrew location, may slow shell startup
+- **mise activates only in interactive shells** — `mise activate` registers prompt hooks, so a script, a cron job, or CI sees no mise tools on PATH. Use `mise exec -- <tool>` there, or `mise activate --shims`.
 - **SSH keychain** — Automatically adds SSH keys to macOS keychain on startup (may prompt for passphrase)
 
 ### Arch Linux
-- **pacman/paru required** — All installers use pacman or paru (AUR helper)
+- **pacman/paru required** — mise and all applications install through pacman or paru (AUR helper)
 - **Gaming setup assumes AMD GPU** — `arch-setup-gaming` installs AMD drivers by default (modify for NVIDIA)
 - **Btrfs recommended** — Snapper snapshots require Btrfs filesystem
 - **Single-GPU passthrough** — VM setup is optimized for single-GPU passthrough (advanced use case)
-- **No version managers by default** — Use `extensions/version-managers.sh.example` if needed
+- **mise replaces the version managers** — `extensions/version-managers.sh.example` keeps nvm/pyenv/rbenv for a machine that still needs them
 
 ### Extensions
 - **PATH overrides** — Extensions load last, so PATH modifications in extensions will override platform defaults
