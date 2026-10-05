@@ -20,7 +20,15 @@ pbr-mise-activate() {
     return 0
   fi
 
-  eval "$(mise activate "$_shell")"
+  # Full activation changes PATH from a prompt hook, so it needs a prompt.
+  # Shells without one (scripts, Claude Code) keep the PATH from startup and
+  # would use the global tool versions in every directory. Shims select the
+  # version for the current directory each time a tool runs.
+  if [[ -n "$CLAUDECODE" || $- != *i* ]]; then
+    eval "$(mise activate "$_shell" --shims)"
+  else
+    eval "$(mise activate "$_shell")"
+  fi
 }
 
 # Languages that `install_development_languages` installs on every platform.
