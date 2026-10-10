@@ -30,7 +30,7 @@ install_development_languages() {
     fi
   fi
 
-  # mise installs Ruby, Python, Node, Zig, Elixir, Bun, Poetry, and Yarn.
+  # mise installs Ruby, Python, Node, Go, Zig, Elixir, Bun, Poetry, and Yarn.
   # It replaces rbenv, pyenv, and nvm. See shared/mise.sh.
   _pbr_mise_install_languages
 
@@ -100,10 +100,10 @@ install_development_tools() {
     fi
   fi
 
-  if ! command -v java &>/dev/null; then
-    echo "Java not found, installing..."
-    brew install openjdk@17
-    if ! command -v java &>/dev/null; then
+  if [[ -z "$(mise ls --installed java 2>/dev/null)" ]]; then
+    echo "Java not found, installing Java 17 with mise..."
+    mise use --global java@temurin-17
+    if ! mise exec -- java -version &>/dev/null; then
       echo "ERROR: java failed to install"
       _failed+=("java")
     fi

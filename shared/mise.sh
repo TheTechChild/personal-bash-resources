@@ -33,7 +33,7 @@ pbr-mise-activate() {
 
 # Languages that `install_development_languages` installs on every platform.
 # Add a tool here and both macOS and Arch get it.
-PBR_MISE_LANGUAGES=(ruby python node zig elixir bun poetry yarn)
+PBR_MISE_LANGUAGES=(ruby python node go zig elixir bun poetry yarn)
 
 # Install each tool in PBR_MISE_LANGUAGES that mise does not have yet.
 # Appends the name of each failure to the caller's _failed array.

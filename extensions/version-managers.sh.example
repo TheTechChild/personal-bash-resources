@@ -47,23 +47,20 @@
 # esac
 
 # ── Go ──────────────────────────────────────────────────
-# if [[ "$PBR_PLATFORM" == "macos" ]]; then
-#   export GOROOT=$(brew --prefix go)/libexec
-# else
-#   export GOROOT=/usr/lib/go
-# fi
+# Go comes from mise and finds its own GOROOT. Do not set GOROOT.
 # export GOPATH=$HOME/go
-# export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+# export PATH=$GOPATH/bin:$PATH
 
 # ── Android SDK ─────────────────────────────────────────
 # if [[ "$PBR_PLATFORM" == "macos" ]]; then
 #   export ANDROID_HOME=$HOME/Library/Android/sdk
-#   export JAVA_HOME=/opt/homebrew/opt/openjdk@17
+#   # Java comes from mise. The mise shims put java on PATH.
+#   export JAVA_HOME=$(mise where java 2>/dev/null)
 # else
 #   export ANDROID_HOME=/opt/android-sdk
 #   export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+#   export PATH=$JAVA_HOME/bin:$PATH
 # fi
-# export PATH=$JAVA_HOME/bin:$PATH
 # export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 # export PATH=$PATH:$ANDROID_HOME/platform-tools
 # export PATH=$PATH:$ANDROID_HOME/emulator

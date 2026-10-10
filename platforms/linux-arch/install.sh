@@ -52,7 +52,7 @@ install_development_languages() {
     fi
   fi
 
-  # mise installs Ruby, Python, Node, Zig, Elixir, Bun, Poetry, and Yarn.
+  # mise installs Ruby, Python, Node, Go, Zig, Elixir, Bun, Poetry, and Yarn.
   # It replaces rbenv, pyenv, and nvm. See shared/mise.sh.
   _pbr_mise_install_languages
 
