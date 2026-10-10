@@ -20,12 +20,20 @@ pbr-mise-activate() {
     return 0
   fi
 
-  eval "$(mise activate "$_shell")"
+  # Full activation changes PATH from a prompt hook, so it needs a prompt.
+  # Shells without one (scripts, Claude Code) keep the PATH from startup and
+  # would use the global tool versions in every directory. Shims select the
+  # version for the current directory each time a tool runs.
+  if [[ -n "$CLAUDECODE" || $- != *i* ]]; then
+    eval "$(mise activate "$_shell" --shims)"
+  else
+    eval "$(mise activate "$_shell")"
+  fi
 }
 
 # Languages that `install_development_languages` installs on every platform.
 # Add a tool here and both macOS and Arch get it.
-PBR_MISE_LANGUAGES=(ruby python node zig elixir bun poetry yarn)
+PBR_MISE_LANGUAGES=(ruby python node go zig elixir bun poetry yarn)
 
 # Install each tool in PBR_MISE_LANGUAGES that mise does not have yet.
 # Appends the name of each failure to the caller's _failed array.
