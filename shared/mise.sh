@@ -25,9 +25,9 @@ pbr-mise-activate() {
   # would use the global tool versions in every directory. Shims select the
   # version for the current directory each time a tool runs.
   if [[ -n "$CLAUDECODE" || $- != *i* ]]; then
-    eval "$(mise activate "$_shell" --shims)"
+    eval "$(command mise activate "$_shell" --shims)"
   else
-    eval "$(mise activate "$_shell")"
+    eval "$(command mise activate "$_shell")"
   fi
 }
 

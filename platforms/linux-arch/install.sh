@@ -44,8 +44,11 @@ install_development_languages() {
   fi
 
   if ! command -v mise &>/dev/null; then
+    # Use the standalone installer, not pacman, so that `mise self-update`
+    # works. It installs to ~/.local/bin/mise, which path.sh puts on PATH.
     echo "mise not found, installing..."
-    _arch_pkg_install mise
+    curl -fsSL https://mise.run | MISE_INSTALL_HELP=0 sh
+    export PATH="$HOME/.local/bin:$PATH"
     if ! command -v mise &>/dev/null; then
       echo "ERROR: mise failed to install"
       return 1
