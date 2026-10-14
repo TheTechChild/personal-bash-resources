@@ -8,9 +8,8 @@ export PNPM_HOME="/Users/$USER/Library/pnpm"
 
 [ -s "/Users/$USER/.bun/_bun" ] && source "/Users/$USER/.bun/_bun"
 
-# mise replaces nvm, pyenv, and rbenv. It must come after path.sh, so that
-# the mise shims stay in front of Homebrew. See shared/mise.sh.
-pbr-mise-activate
+# mise replaces nvm, pyenv, and rbenv. init.sh activates it after path.sh.
+# See shared/mise.sh.
 
 # Docker CLI completions
 fpath=(/Users/$USER/.docker/completions $fpath)
