@@ -35,16 +35,16 @@ personal-bash-resources/
 │   └── mise.sh                      # mise activation + shared language list
 ├── platforms/
 │   ├── macos/                       # macOS-specific modules
-│   │   ├── init.sh                  # Sources all macOS modules in order
+│   │   ├── init.sh                  # Sources all macOS modules in order, activates mise after path.sh
 │   │   ├── path.sh                  # Homebrew PATH, PNPM
-│   │   ├── env.sh                   # BUN/PNPM init, mise activation, Docker completions
+│   │   ├── env.sh                   # BUN/PNPM init, Docker completions
 │   │   ├── ssh.sh                   # ssh-add --apple-use-keychain
 │   │   ├── install.sh               # mise for languages, Homebrew for applications
 │   │   └── gaming.sh                # OpenEmu alias
 │   └── linux-arch/                  # Arch Linux-specific modules
-│       ├── init.sh                  # Sources all Arch modules in order
+│       ├── init.sh                  # Sources all Arch modules in order, activates mise after path.sh
 │       ├── path.sh                  # Linux PATH entries, XDG-compliant paths
-│       ├── env.sh                   # mise activation, colors
+│       ├── env.sh                   # Colors, optional tool bootstraps
 │       ├── ssh.sh                   # keychain or ssh-agent fallback
 │       ├── install.sh               # mise for languages, pacman/paru for applications
 │       └── gaming.sh                # Full Arch gaming setup (700+ LOC)
@@ -69,7 +69,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 ### Module Loading Order
 
 1. `main.sh` detects platform, sources `shared/*.sh`
-2. `platforms/$PBR_PLATFORM/init.sh` sources platform modules (path → env → ssh → install → gaming)
+2. `platforms/$PBR_PLATFORM/init.sh` sources platform modules (env → path → `pbr-mise-activate` → ssh → install → gaming)
 3. `extensions/index.sh` auto-loads all `extensions/*.sh` (user overrides take priority)
 
 ## Script Reference
@@ -99,7 +99,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 - Internal helpers: `_pbr_resolve_path`, `_pbr_get_manifest_path`, `_pbr_platform_index`
 
 #### `shared/mise.sh`
-- `pbr-mise-activate` — Activate mise for the current shell (zsh or bash). Does nothing if mise is absent. Platform `env.sh` calls it after `path.sh`.
+- `pbr-mise-activate` — Activate mise for the current shell (zsh or bash). Does nothing if mise is absent. Platform `init.sh` calls it after `path.sh`.
 - `PBR_MISE_LANGUAGES` — The language list both platforms install. Add a tool here, and macOS and Arch both get it.
 - `_pbr_mise_install_languages` — Install each missing tool from `PBR_MISE_LANGUAGES` with `mise use --global`, and enable the idiomatic version files (`.nvmrc`, `.node-version`, `.ruby-version`, `.python-version`). Appends failures to the caller's `_failed` array.
 
@@ -166,7 +166,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 - All PATH modifications in `platforms/*/path.sh`
 - Minimal on Arch — system paths only
 - macOS: Homebrew, PNPM, Android SDK, etc.
-- **Order matters**: `pbr-mise-activate` runs in `env.sh`, after `path.sh`, so that the mise shims stay in front of Homebrew and the system directories. Do not move it into `shared/`, because `shared/*.sh` loads before `path.sh`.
+- **Order matters**: `pbr-mise-activate` runs in `init.sh`, after `path.sh`. The standalone installer puts mise in `~/.local/bin`, and only `path.sh` adds that directory to PATH. If activation runs first, `command -v mise` fails and mise does not turn on in a new shell. Activation after `path.sh` also keeps the mise shims in front of Homebrew and the system directories. Do not move it into `env.sh` or `shared/`, because both load before `path.sh`.
 
 ### Extensions
 - `extensions/` is gitignored (except `index.sh` and `.example` files)

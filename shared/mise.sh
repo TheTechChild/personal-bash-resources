@@ -5,7 +5,7 @@
 # .tool-versions, mise.toml, .nvmrc, .node-version, .ruby-version, and
 # .python-version, so it understands the files the old managers used.
 #
-# Platform env.sh calls pbr-mise-activate AFTER it sets PATH, so that the
+# Platform init.sh calls pbr-mise-activate AFTER path.sh sets PATH, so that the
 # mise shims stay in front of the system and Homebrew directories.
 
 pbr-mise-activate() {

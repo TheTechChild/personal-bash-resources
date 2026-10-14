@@ -9,8 +9,7 @@ eval "$(dircolors -b)"
 export LS_COLORS="$LS_COLORS:ow=1;34"
 
 # ── mise ────────────────────────────────────────────────
-# Comes after path.sh, so that the mise shims stay in front. See shared/mise.sh.
-pbr-mise-activate
+# init.sh activates mise after path.sh. See shared/mise.sh.
 
 # ── Optional tool bootstraps ────────────────────────────
 if [ -f "$HOME/.config/fabric/fabric-bootstrap.inc" ]; then

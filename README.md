@@ -49,14 +49,14 @@ personal-bash-resources/
     macos/                   # macOS-specific modules
       init.sh                # Sources all macOS modules in order
       path.sh                # Homebrew PATH entries, PNPM
-      env.sh                 # BUN/PNPM init, mise activation, Docker completions
+      env.sh                 # BUN/PNPM init, Docker completions
       ssh.sh                 # ssh-add --apple-use-keychain
       install.sh             # mise for languages, Homebrew for applications
       gaming.sh              # OpenEmu alias
     linux-arch/              # Arch Linux-specific modules
       init.sh                # Sources all Arch modules in order
       path.sh                # Linux PATH entries, XDG-compliant paths
-      env.sh                 # mise activation, colors
+      env.sh                 # Colors, optional tool bootstraps
       ssh.sh                 # keychain or ssh-agent fallback
       install.sh             # mise for languages, pacman/paru for applications
       gaming.sh              # Full Arch gaming setup (Hyprland, DWM, Steam, Lutris, etc.)
@@ -136,7 +136,7 @@ mise reads these files, and it changes the version when you change directory:
 | Show the versions in use here | `mise current` |
 | Run a tool without a shell restart | `mise exec -- terraform version` |
 
-mise activates in `platforms/$PBR_PLATFORM/env.sh`, after `path.sh`. The
+mise activates in `platforms/$PBR_PLATFORM/init.sh`, after `path.sh`. The
 `pbr-mise-activate` function in `shared/mise.sh` does the work, and it does
 nothing if mise is absent.
 
