@@ -45,6 +45,7 @@ personal-bash-resources/
     git_functions.sh         # Git helpers (git-update-subfolders, install_dependencies)
     media_utilities.sh       # Media conversion (convert_webp_to_jpg, embed_album_art)
     mise.sh                  # mise activation + language list (replaces nvm/pyenv/rbenv)
+    yt-dlp.sh                # yt-dlp helpers (ytv, yta, ytpl, ytch, ytclip, ...)
   platforms/
     macos/                   # macOS-specific modules
       init.sh                # Sources all macOS modules in order
@@ -163,6 +164,16 @@ machine still needs it.
 ### Media
 - `convert_webp_to_jpg` - Convert WebP images to JPG
 - `embed_album_art` - Add album art to MP3 files
+
+### yt-dlp
+Needs yt-dlp, ffmpeg, and node (`mise use -g yt-dlp@latest`). Files go to `$YTDL_DIR` (default `~/Downloads`). Run `yt-help` for the full list.
+- `ytv` - H.264 MP4 up to 1080p (plays in QuickTime)
+- `ytv-best` / `ytv-res <height>` - Highest quality MKV / H.264 MP4 with a maximum height
+- `ytclip <url> <start> <end>` - Part of a video
+- `yta` / `yta-m4a` - Audio as MP3 / M4A with cover art
+- `ytpl` / `ytpl-audio` - Full playlist as MP4 / MP3 album
+- `ytch` / `ytch-audio` - All videos of a channel as MP4 / MP3
+- `ytsubs`, `ytthumb`, `ytinfo`, `ytformats`, `ytdl-update` - Subtitles, thumbnail, info, formats, update
 
 ### Arch Linux Gaming (linux-arch only)
 - `arch-setup-base` - Base packages, AUR helper, networking
