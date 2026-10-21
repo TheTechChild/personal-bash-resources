@@ -32,7 +32,8 @@ personal-bash-resources/
 │   ├── file_utilities.sh            # File ops (tch, backup-pbr, restore-pbr)
 │   ├── git_functions.sh             # Git helpers (git-update-subfolders, install_dependencies)
 │   ├── media_utilities.sh           # Media conversion (webp→jpg, embed album art)
-│   └── mise.sh                      # mise activation + shared language list
+│   ├── mise.sh                      # mise activation + shared language list
+│   └── yt-dlp.sh                    # yt-dlp download helpers (video, audio, playlists, channels)
 ├── platforms/
 │   ├── macos/                       # macOS-specific modules
 │   │   ├── init.sh                  # Sources all macOS modules in order, activates mise after path.sh
@@ -106,6 +107,14 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 #### `shared/media_utilities.sh`
 - `convert_webp_to_jpg <input.webp> <output.jpg>` — Convert WebP to JPG using ffmpeg
 - `embed_album_art <image.jpg> <mp3_dir>` — Embed album art into all MP3s in directory
+
+#### `shared/yt-dlp.sh`
+All functions take URLs, then optional yt-dlp flags that override the defaults. Output goes to `${YTDL_DIR:-~/Downloads}`. `yt-help` prints the list.
+- `ytv`, `ytv-best`, `ytv-res <height>`, `ytclip <url> <start> <end>` — Video (H.264 MP4, best MKV, height limit, section)
+- `yta`, `yta-m4a` — Audio (MP3, M4A) with tags and cover art
+- `ytpl`, `ytpl-audio`, `ytch`, `ytch-audio` — Playlists and channels, with a download archive so a rerun gets only new videos
+- `ytsubs`, `ytthumb`, `ytinfo`, `ytformats`, `ytdl-update` — Subtitles (SRT), thumbnail, info, format list, update
+- Internal helpers: `_ytdl` (shared flags, falls back to `mise exec`), `_ytdl_need_args`
 
 #### `shared/aws.sh`
 - `aws-login <profile>` — AWS SSO login and export credentials to environment
@@ -210,6 +219,12 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 
 ### Media Utilities
 - **ffmpeg required** — Both `convert_webp_to_jpg` and `embed_album_art` require ffmpeg in PATH
+
+### yt-dlp
+- **node, not deno** — `_ytdl` passes `--js-runtimes node`. Do not add deno.
+- **Subtitle filter** — Do not use `--sub-langs "en.*"`. It also matches the automatic translations (`en-zh-Hans`, `en-pt-BR`, ...), and the many requests cause HTTP 429 errors. Use `$_YTDL_SUBS`.
+- **Download archive** — `ytpl`/`ytch` share `.ytdl-archive-video.txt` and the audio helpers share `.ytdl-archive-audio.txt` in `$YTDL_DIR`. A video in the archive is skipped, also in a different playlist. Add `--no-download-archive` to override.
+- **Old yt-dlp** — YouTube changes often. Run `ytdl-update` first when a download fails.
 
 ### Backup/Restore
 - **Password recovery impossible** — Encrypted backups use AES-256; forgotten passwords cannot be recovered
