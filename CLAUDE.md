@@ -79,7 +79,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 
 #### `shared/aliases.sh`
 - `ll` — `ls -la`
-- `rsrc` — Reload shell config (`source ~/.bashrc`)
+- `rsrc` — Function, not an alias. Reload shell config: sources `~/.zshrc` in zsh, `~/.bashrc` in bash
 - `dsp` — Docker system prune
 - `tf` — Terraform alias
 - `python2` — Python alias
