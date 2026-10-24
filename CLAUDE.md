@@ -31,6 +31,7 @@ personal-bash-resources/
 │   ├── aws.sh                       # AWS SSO login helper
 │   ├── file_utilities.sh            # File ops (tch, backup-pbr, restore-pbr)
 │   ├── git_functions.sh             # Git helpers (git-update-subfolders, install_dependencies)
+│   ├── keybindings.sh               # Ctrl+Left/Right word movement (zsh bindkey, bash bind)
 │   ├── media_utilities.sh           # Media conversion (webp→jpg, embed album art)
 │   ├── mise.sh                      # mise activation + shared language list
 │   └── yt-dlp.sh                    # yt-dlp download helpers (video, audio, playlists, channels)
@@ -98,6 +99,11 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 - `restore-pbr [file]` — Restore from encrypted/unencrypted backup (auto-detects `.enc` vs `.zip`)
 - `restore-pbr-extensions` — Alias for `restore-pbr` (backwards compatibility)
 - Internal helpers: `_pbr_resolve_path`, `_pbr_get_manifest_path`, `_pbr_platform_index`
+
+#### `shared/keybindings.sh`
+- Ctrl+Left (`ESC[1;5D`) → `backward-word`, Ctrl+Right (`ESC[1;5C`) → `forward-word`
+- Uses `bindkey` in zsh and `bind` in bash. Runs only in interactive shells, because `bind` fails without readline.
+- On macOS, turn off the Mission Control "Move left/right a space" shortcuts, or macOS takes these keys first.
 
 #### `shared/mise.sh`
 - `pbr-mise-activate` — Activate mise for the current shell (zsh or bash). Does nothing if mise is absent. Platform `init.sh` calls it after `path.sh`.

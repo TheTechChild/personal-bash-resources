@@ -43,6 +43,7 @@ personal-bash-resources/
     aws.sh                   # AWS CLI helpers (aws-login)
     file_utilities.sh        # File operations (tch, backup-pbr, restore-pbr-extensions)
     git_functions.sh         # Git helpers (git-update-subfolders, install_dependencies)
+    keybindings.sh           # Ctrl+Left/Right moves one word (zsh and bash)
     media_utilities.sh       # Media conversion (convert_webp_to_jpg, embed_album_art)
     mise.sh                  # mise activation + language list (replaces nvm/pyenv/rbenv)
     yt-dlp.sh                # yt-dlp helpers (ytv, yta, ytpl, ytch, ytclip, ...)
