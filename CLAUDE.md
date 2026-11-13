@@ -49,7 +49,8 @@ personal-bash-resources/
 │       ├── env.sh                   # Colors, optional tool bootstraps
 │       ├── ssh.sh                   # keychain or ssh-agent fallback
 │       ├── install.sh               # mise for languages, pacman/paru for applications
-│       └── gaming.sh                # Full Arch gaming setup (700+ LOC)
+│       ├── gaming.sh                # Full Arch gaming setup (700+ LOC)
+│       └── android.sh               # adb helpers: debloat ad/auto-install packages from an Android phone
 ├── extensions/                      # User-specific configs (gitignored except examples)
 │   ├── index.sh                     # Auto-loads all .sh files in extensions/
 │   ├── version-managers.sh.example  # Legacy nvm/pyenv/rbenv escape hatch (mise is the default)
@@ -71,7 +72,7 @@ Use `$PBR_PLATFORM` in extensions for platform-specific logic.
 ### Module Loading Order
 
 1. `main.sh` detects platform, sources `shared/*.sh`
-2. `platforms/$PBR_PLATFORM/init.sh` sources platform modules (env → path → `pbr-mise-activate` → ssh → install → gaming)
+2. `platforms/$PBR_PLATFORM/init.sh` sources platform modules (env → path → `pbr-mise-activate` → ssh → install → gaming → android)
 3. `extensions/index.sh` auto-loads all `extensions/*.sh` (user overrides take priority)
 
 ## Script Reference
@@ -159,6 +160,14 @@ All functions take URLs, then optional yt-dlp flags that override the defaults. 
 - `_arch_check_aur_helper` — Detect paru/yay
 - `_arch_install_packages`, `_arch_install_aur_packages` — Package installation wrappers
 
+#### `platforms/linux-arch/android.sh`
+adb helpers for an Android phone (written for a Moto G Stylus 5G 2024). Each function takes an optional serial as the last argument; without one it uses `$ANDROID_SERIAL`, then the only connected device.
+- `android-debloat [serial]` — Remove every installed package in `PBR_ANDROID_DEBLOAT_PACKAGES` with `pm uninstall -k --user 0` (Glance/Taboola lock screen ads, Digital Turbine and ironSource Aura silent installers, ad folders). Rerun after each OS update.
+- `android-find-bloat [serial]` — List installed packages that match `PBR_ANDROID_BLOAT_PATTERN`, to find new bloat after an update
+- `android-list-user-apps [serial]` — List third-party packages (`pm list packages -3`)
+- `android-restore <package> [serial]` — Bring a removed package back with `pm install-existing`
+- Internal helpers: `_android_pick_device`, `_android_packages`
+
 ## Conventions
 
 ### Naming
@@ -213,6 +222,11 @@ All functions take URLs, then optional yt-dlp flags that override the defaults. 
 - **Btrfs recommended** — Snapper snapshots require Btrfs filesystem
 - **Single-GPU passthrough** — VM setup is optimized for single-GPU passthrough (advanced use case)
 - **mise replaces the version managers** — `extensions/version-managers.sh.example` keeps nvm/pyenv/rbenv for a machine that still needs them
+
+### Android (adb)
+- **android-tools required** — `sudo pacman -S android-tools`
+- **Wireless debugging duplicates** — mDNS auto-connect can list the same phone twice (`adb-<serial>._adb-tls-connect._tcp` and `<ip>:<port>`), which gives "more than one device" errors. Pass the `<ip>:<port>` serial, or restart the server with `ADB_MDNS_AUTO_CONNECT=0`.
+- **OS updates reinstall bloat** — `--user 0` removal keeps the APK in `/system`; an update can bring packages back. Rerun `android-debloat`, and `android-find-bloat` to catch new ones.
 
 ### Extensions
 - **PATH overrides** — Extensions load last, so PATH modifications in extensions will override platform defaults
