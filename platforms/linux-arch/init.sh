@@ -13,5 +13,6 @@ pbr-mise-activate
 source "$local_platform_dir/ssh.sh"
 source "$local_platform_dir/install.sh"
 source "$local_platform_dir/gaming.sh"
+source "$local_platform_dir/android.sh"
 
 unset local_platform_dir
